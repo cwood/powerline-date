@@ -6,7 +6,7 @@ setup(
     author='Colin Wood',
     author_email='',
     install_requires=[
-
+        'python-dateutil',
     ],
     url='',
     download_url='',
