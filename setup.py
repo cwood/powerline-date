@@ -14,7 +14,7 @@ setup(
     version=version,
     include_package_data=True,
     packages=find_packages(),
-    description='',
+    description='A powerline date segment replacement',
     tests_require=[
         'nose',
     ],
