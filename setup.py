@@ -4,12 +4,12 @@ from powerline_date import version
 setup(
     name='powerline_date',
     author='Colin Wood',
-    author_email='',
+    author_email='cwood06@gmail.com',
     install_requires=[
         'python-dateutil',
     ],
-    url='',
-    download_url='',
+    url='https://bitbucket.org/colinbits/powerline-date',
+    download_url='https://bitbucket.org/colinbits/powerline-date',
     long_description=open('README.mkd').read(),
     version=version,
     include_package_data=True,
