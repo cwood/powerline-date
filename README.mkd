@@ -1,3 +1,39 @@
 Powerline Date Segment
 =======================
 This just has the minor feature of allowing time zones.
+
+Powerline date segment is a drop in replacement for the regular date segment.
+
+Usage:
+---------------------------
+
+
+```json
+{
+    "function": "powerline_date.date",
+    "name": "sydney_time",
+    "args": {
+        "format": "%H:%M %Z",
+        "istime": true,
+        "timezone": "Australia/Sydney"
+    }
+},
+{
+    "function": "powerline_date.date",
+    "name": "utc_time",
+    "args": {
+        "format": "%H:%M %Z",
+        "istime": true,
+        "timezone": "UTC"
+    }
+},
+{
+    "function": "powerline_date.date",
+    "name": "edt_time",
+    "args": {
+        "format": "%H:%M %Z",
+        "istime": true,
+        "timezone": "America/New_York"
+    }
+},
+```
