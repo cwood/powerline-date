@@ -1,5 +1,4 @@
 from setuptools import setup, find_packages
-from powerline_date import version
 
 setup(
     name='powerline_date',
@@ -8,10 +7,10 @@ setup(
     install_requires=[
         'python-dateutil',
     ],
-    url='https://bitbucket.org/colinbits/powerline-date',
-    download_url='https://bitbucket.org/colinbits/powerline-date',
+    url='https://github.com/cwood/powerlin-date',
+    download_url='https://github.com/cwood/powerline-date',
     long_description=open('README.mkd').read(),
-    version=version,
+    version="0.0.1",
     include_package_data=True,
     packages=find_packages(),
     description='A powerline date segment replacement',
