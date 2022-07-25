@@ -2,7 +2,7 @@ from datetime import datetime
 from dateutil import tz
 
 
-def date(pl, format='%Y-%m-%d', timezone=None):
+def date(pl, format='%Y-%m-%d', timezone=None, istime=True):
     group = ['time']
     if not timezone:
         now = datetime.now()
