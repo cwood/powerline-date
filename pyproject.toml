@@ -1,0 +1,6 @@
+[project]
+name = "powerline-date"
+version = "0.0.1"
+dependencies = [
+    "python-dateutil",
+]
