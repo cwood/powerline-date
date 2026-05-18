@@ -37,3 +37,31 @@ Usage:
     }
 },
 ```
+
+Rotating between time zones:
+---------------------------
+
+Instead of multiple segments, one segment can rotate through a list of time
+zones. Each entry can carry its own `format` and `highlight_group` (suffix
+appended to `time:`), letting you color each zone differently in your
+colorscheme.
+
+```json
+{
+    "function": "powerline_date.date",
+    "name": "rotating_time",
+    "args": {
+        "cycle_seconds": 5,
+        "timezones": [
+            {"timezone": "America/New_York", "format": "%I:%M %p 🗽", "highlight_group": "eastern"},
+            {"timezone": "America/Chicago",  "format": "%I:%M %p %Z 🤠", "highlight_group": "central"},
+            {"timezone": "UTC",              "format": "%H:%M %Z 👾",   "highlight_group": "UTC"}
+        ]
+    }
+}
+```
+
+The active entry is chosen deterministically from the current wall clock, so
+no state is kept between renders. For the rotation to look smooth, powerline
+needs to re-render at least as often as `cycle_seconds` — for tmux that means
+`set -g status-interval 1` (or 2) in `tmux.conf`.
