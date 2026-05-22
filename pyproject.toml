@@ -1,6 +1,18 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
 [project]
 name = "powerline-date"
-version = "0.0.1"
+version = "0.1.0"
+description = "Powerline date segment with timezone and 30s rotation support"
+requires-python = ">=3.10"
 dependencies = [
     "python-dateutil",
 ]
+
+[project.optional-dependencies]
+test = ["pytest"]
+
+[tool.hatch.build.targets.wheel]
+include = ["powerline_date.py"]
