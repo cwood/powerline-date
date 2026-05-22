@@ -1,67 +1,110 @@
-Powerline Date Segment
-=======================
-This just has the minor feature of allowing time zones.
+# powerline-date
 
-Powerline date segment is a drop in replacement for the regular date segment.
+[![CI](https://github.com/cwood/powerline-date/actions/workflows/ci.yml/badge.svg)](https://github.com/cwood/powerline-date/actions/workflows/ci.yml)
+[![PyPI](https://img.shields.io/pypi/v/powerline-date.svg)](https://pypi.org/project/powerline-date/)
+[![Python versions](https://img.shields.io/pypi/pyversions/powerline-date.svg)](https://pypi.org/project/powerline-date/)
 
-Usage:
----------------------------
+A drop-in replacement for [Powerline](https://github.com/powerline/powerline)'s
+built-in `date` segment that adds **timezone support** and lets a single segment
+**rotate through several timezones** on a fixed interval.
 
+## Features
+
+- Render the time or date in any IANA timezone.
+- Rotate one segment through a list of zones — each with its own `format` and
+  colorscheme highlight group — instead of stacking a segment per zone.
+- Stateless: the active zone is derived from the wall clock, so nothing is kept
+  between renders and no daemon state is required.
+
+## Installation
+
+Install into the **same environment as Powerline**. If you manage Powerline
+with pipx:
+
+```bash
+pipx inject powerline-status powerline-date
+```
+
+Otherwise:
+
+```bash
+pip install powerline-date
+```
+
+## Usage
+
+The package exposes `powerline_date.date`, usable anywhere a Powerline segment
+function is accepted (e.g. a tmux theme's `segments`).
+
+### A single timezone
 
 ```json
-{
-    "function": "powerline_date.date",
-    "name": "sydney_time",
-    "args": {
-        "format": "%H:%M %Z",
-        "istime": true,
-        "timezone": "Australia/Sydney"
-    }
-},
 {
     "function": "powerline_date.date",
     "name": "utc_time",
     "args": {
         "format": "%H:%M %Z",
-        "istime": true,
         "timezone": "UTC"
     }
-},
-{
-    "function": "powerline_date.date",
-    "name": "edt_time",
-    "args": {
-        "format": "%H:%M %Z",
-        "istime": true,
-        "timezone": "America/New_York"
-    }
-},
+}
 ```
 
-Rotating between time zones:
----------------------------
+### Rotating through timezones
 
-Instead of multiple segments, one segment can rotate through a list of time
-zones. Each entry can carry its own `format` and `highlight_group` (suffix
-appended to `time:`), letting you color each zone differently in your
-colorscheme.
+One segment can cycle through a list of zones. Each entry may carry its own
+`format` and `highlight_group` (a suffix appended to `time:`), so each zone can
+be colored differently in your colorscheme.
 
 ```json
 {
     "function": "powerline_date.date",
     "name": "rotating_time",
     "args": {
-        "cycle_seconds": 5,
+        "cycle_seconds": 30,
         "timezones": [
-            {"timezone": "America/New_York", "format": "%I:%M %p 🗽", "highlight_group": "eastern"},
+            {"timezone": "America/New_York", "format": "%I:%M %p 🗽",    "highlight_group": "eastern"},
             {"timezone": "America/Chicago",  "format": "%I:%M %p %Z 🤠", "highlight_group": "central"},
-            {"timezone": "UTC",              "format": "%H:%M %Z 👾",   "highlight_group": "UTC"}
+            {"timezone": "UTC",              "format": "%H:%M %Z 👾",    "highlight_group": "UTC"}
         ]
     }
 }
 ```
 
-The active entry is chosen deterministically from the current wall clock, so
-no state is kept between renders. For the rotation to look smooth, powerline
-needs to re-render at least as often as `cycle_seconds` — for tmux that means
-`set -g status-interval 1` (or 2) in `tmux.conf`.
+The active entry is chosen deterministically from the current time, so no state
+is kept between renders. For the rotation to look smooth, Powerline must
+re-render at least as often as `cycle_seconds`. In tmux:
+
+```tmux
+set -g status-interval 5
+```
+
+### Arguments
+
+| Argument | Default | Description |
+|---|---|---|
+| `format` | `%Y-%m-%d` | `strftime` format. Used as the fallback when a rotation entry omits its own `format`. |
+| `timezone` | `None` | IANA name (e.g. `America/New_York`). Local time is used when unset. |
+| `timezones` | `None` | List of rotation entries, each with `timezone` and optional `format` / `highlight_group`. Takes precedence over `timezone`. |
+| `cycle_seconds` | `5` | Seconds each entry is shown before rotating to the next. |
+
+### Colorscheme
+
+Each rendered entry uses the highlight groups
+`["time:<highlight_group>", "time"]`, falling back to `time` when the specific
+group is undefined, with `time:divider` for the divider. Define these in your
+colorscheme to color each zone:
+
+```json
+{
+    "groups": {
+        "time":         {"fg": "white", "bg": "darkblue"},
+        "time:divider": {"fg": "black", "bg": "darkblue"},
+        "time:eastern": {"fg": "white", "bg": "darkblue"},
+        "time:central": {"fg": "white", "bg": "darkgreen"},
+        "time:UTC":     {"fg": "white", "bg": "darkestpurple"}
+    }
+}
+```
+
+When `highlight_group` is omitted, the timezone name itself is used as the
+suffix (e.g. `time:America/New_York`).
